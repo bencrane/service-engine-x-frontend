@@ -1,92 +1,27 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.serviceengine.xyz";
+import type { Order, Proposal } from "@/types";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.serviceengine.xyz";
 const API_TOKEN = process.env.API_TOKEN;
 
-// API Response Types - flexible to handle real API data
-export interface Client {
-  id: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-}
+// =============================================================================
+// Error Handling
+// =============================================================================
 
-export interface OrderTask {
-  id: string;
-  title: string;
-  description?: string;
-  status: string;
-  assignedTo?: string;
-  dueDate?: string;
-  completedAt?: string;
-}
-
-export interface OrderMessage {
-  id: string;
-  content: string;
-  sender: string;
-  createdAt: string;
-  isInternal?: boolean;
-}
-
-export interface LineItem {
-  id: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
-}
-
-export interface Order {
-  id: string;
-  number?: string;
-  status: string;
-  client?: Client;
-  clientName?: string;
-  service?: string;
-  services?: Array<{
-    id: string;
-    name: string;
-    description?: string;
-    status?: string;
-    scheduledDate?: string;
-  }>;
-  tasks?: OrderTask[];
-  messages?: OrderMessage[];
-  lineItems?: LineItem[];
-  total?: number;
-  subtotal?: number;
-  tax?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  completedAt?: string;
-  notes?: string;
-  [key: string]: unknown; // Allow additional fields from API
-}
-
-export interface Proposal {
-  id: string;
-  number?: string;
-  status: string;
-  client?: Client;
-  clientName?: string;
-  lineItems?: LineItem[];
-  subtotal?: number;
-  tax?: number;
-  total?: number;
-  validUntil?: string;
-  createdAt?: string;
-  notes?: string;
-  [key: string]: unknown;
-}
-
-class APIError extends Error {
-  constructor(public status: number, message: string) {
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    message: string
+  ) {
     super(message);
-    this.name = "APIError";
+    this.name = "ApiError";
   }
 }
 
-async function fetchAPI<T>(endpoint: string): Promise<T> {
+// =============================================================================
+// Core Fetch Utility
+// =============================================================================
+
+async function fetchApi<T>(endpoint: string): Promise<T> {
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
@@ -101,28 +36,35 @@ async function fetchAPI<T>(endpoint: string): Promise<T> {
   });
 
   if (!response.ok) {
-    throw new APIError(response.status, `API error: ${response.status} ${response.statusText}`);
+    throw new ApiError(
+      response.status,
+      `API error: ${response.status} ${response.statusText}`
+    );
   }
 
-  return response.json();
+  return response.json() as Promise<T>;
 }
+
+// =============================================================================
+// Order API
+// =============================================================================
 
 export async function fetchOrder(id: string): Promise<Order> {
-  return fetchAPI<Order>(`/api/orders/${id}`);
+  return fetchApi<Order>(`/api/orders/${id}`);
 }
 
-export async function fetchOrders(): Promise<Order[]> {
-  return fetchAPI<Order[]>(`/api/orders`);
+export async function fetchOrders(): Promise<ReadonlyArray<Order>> {
+  return fetchApi<ReadonlyArray<Order>>(`/api/orders`);
 }
+
+// =============================================================================
+// Proposal API
+// =============================================================================
 
 export async function fetchProposal(id: string): Promise<Proposal> {
-  return fetchAPI<Proposal>(`/api/proposals/${id}`);
+  return fetchApi<Proposal>(`/api/proposals/${id}`);
 }
 
-export async function fetchProposals(): Promise<Proposal[]> {
-  return fetchAPI<Proposal[]>(`/api/proposals`);
+export async function fetchProposals(): Promise<ReadonlyArray<Proposal>> {
+  return fetchApi<ReadonlyArray<Proposal>>(`/api/proposals`);
 }
-
-// Keep old function names for backwards compatibility
-export const getOrder = fetchOrder;
-export const getProposal = fetchProposal;

@@ -1,75 +1,94 @@
 import Link from "next/link";
+import { ArrowRight, FileText, Package } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 // Test order ID - replace with a real order ID from your API
 const TEST_ORDER_ID = "test-order-123";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="text-center py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <div className="max-w-4xl mx-auto space-y-12">
+      {/* Hero Section */}
+      <section className="text-center space-y-4 py-8">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           Welcome to Service Engine
         </h1>
-        <p className="text-lg text-gray-600 mb-8">
-          Your customer portal for viewing proposals and orders.
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Your customer portal for viewing proposals and tracking orders. Access
+          all your service information in one place.
         </p>
-      </div>
+      </section>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Proposals</h2>
-          <p className="text-gray-600 mb-4">
-            View and sign proposals sent to you. Review line items, pricing, and
-            terms before accepting.
-          </p>
-          <p className="text-sm text-gray-500">
-            Access your proposals via the link provided in your email.
-          </p>
-        </div>
+      {/* Feature Cards */}
+      <section className="grid gap-6 sm:grid-cols-2">
+        <Card className="relative overflow-hidden">
+          <CardHeader>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 mb-2">
+              <FileText className="h-5 w-5 text-primary" />
+            </div>
+            <CardTitle>Proposals</CardTitle>
+            <CardDescription>
+              View and sign proposals sent to you. Review line items, pricing,
+              and terms before accepting.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Access your proposals via the link provided in your email.
+            </p>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Orders</h2>
-          <p className="text-gray-600 mb-4">
-            Track the status of your orders and scheduled services. See what&apos;s
-            completed and what&apos;s coming up.
-          </p>
-          <p className="text-sm text-gray-500">
-            Access your orders via the link provided in your email.
-          </p>
-        </div>
-      </div>
+        <Card className="relative overflow-hidden">
+          <CardHeader>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 mb-2">
+              <Package className="h-5 w-5 text-primary" />
+            </div>
+            <CardTitle>Orders</CardTitle>
+            <CardDescription>
+              Track the status of your orders and scheduled services. See
+              what&apos;s completed and what&apos;s coming up.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Access your orders via the link provided in your email.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
 
       {/* Test Links Section */}
-      <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
-          Test Links
-        </h3>
-        <div className="space-y-3">
-          <div>
-            <Link
-              href={`/orders/${TEST_ORDER_ID}`}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              View Test Order →
+      <section className="rounded-lg border border-border bg-muted/50 p-6">
+        <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground mb-4">
+          Development Links
+        </h2>
+        <div className="flex flex-wrap gap-4">
+          <Button asChild>
+            <Link href={`/orders/${TEST_ORDER_ID}`}>
+              View Test Order
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
-            <p className="text-xs text-gray-500 mt-1">
-              Order ID: {TEST_ORDER_ID}
-            </p>
-          </div>
+          </Button>
+          <p className="flex items-center text-sm text-muted-foreground">
+            Order ID: <code className="ml-1 rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{TEST_ORDER_ID}</code>
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div className="mt-12 text-center">
-        <p className="text-gray-500">
+      {/* Support Section */}
+      <section className="text-center py-4">
+        <p className="text-muted-foreground">
           Need help? Contact us at{" "}
           <a
             href="mailto:support@serviceengine.xyz"
-            className="text-blue-600 hover:underline"
+            className="font-medium text-primary hover:underline"
           >
             support@serviceengine.xyz
           </a>
         </p>
-      </div>
+      </section>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -6,42 +7,59 @@ export const metadata: Metadata = {
   description: "View and manage your proposals and orders",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+interface RootLayoutProps {
+  readonly children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 min-h-screen">
-        <header className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <a href="/" className="text-xl font-semibold text-gray-900">
-                Service Engine
-              </a>
-              <nav className="flex items-center gap-6">
-                <a
-                  href="/"
-                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  Home
-                </a>
-              </nav>
-            </div>
-          </div>
-        </header>
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {children}
-        </main>
-        <footer className="border-t border-gray-200 mt-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <p className="text-sm text-gray-500 text-center">
-              &copy; {new Date().getFullYear()} Service Engine. All rights reserved.
-            </p>
-          </div>
-        </footer>
+      <body className="min-h-screen bg-background font-sans antialiased">
+        <div className="relative flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">
+            <div className="container max-w-7xl py-8">{children}</div>
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
+  );
+}
+
+function Header() {
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 max-w-7xl items-center">
+        <Link
+          href="/"
+          className="flex items-center space-x-2 font-semibold text-foreground"
+        >
+          <span>Service Engine</span>
+        </Link>
+        <nav className="ml-auto flex items-center space-x-6">
+          <Link
+            href="/"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Home
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="border-t border-border">
+      <div className="container flex h-14 max-w-7xl items-center justify-center">
+        <p className="text-sm text-muted-foreground">
+          &copy; {currentYear} Service Engine. All rights reserved.
+        </p>
+      </div>
+    </footer>
   );
 }

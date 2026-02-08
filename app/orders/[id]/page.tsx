@@ -1,29 +1,44 @@
-import { getOrder } from "@/lib/api";
-import OrderView from "@/components/OrderView";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { fetchOrder, ApiError } from "@/lib/api";
+import { OrderView } from "@/components/OrderView";
+import { OrderSkeleton } from "@/components/features/order-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AlertCircle } from "lucide-react";
 
 interface OrderPageProps {
   params: Promise<{ id: string }>;
 }
 
+async function OrderContent({ id }: { id: string }) {
+  try {
+    const order = await fetchOrder(id);
+    return <OrderView order={order} />;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      notFound();
+    }
+
+    return (
+      <EmptyState
+        title="Unable to load order"
+        description="We couldn't retrieve this order. Please check the URL or try again later."
+        icon={<AlertCircle className="h-6 w-6 text-destructive" />}
+        action={{
+          label: "Go to homepage",
+          href: "/",
+        }}
+      />
+    );
+  }
+}
+
 export default async function OrderPage({ params }: OrderPageProps) {
   const { id } = await params;
 
-  try {
-    const order = await getOrder(id);
-    return <OrderView order={order} />;
-  } catch (error) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h1 className="text-xl font-semibold text-red-800 mb-2">
-            Order Not Found
-          </h1>
-          <p className="text-red-600">
-            The order you&apos;re looking for doesn&apos;t exist or you don&apos;t have
-            permission to view it.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <Suspense fallback={<OrderSkeleton />}>
+      <OrderContent id={id} />
+    </Suspense>
+  );
 }

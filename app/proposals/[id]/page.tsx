@@ -1,29 +1,44 @@
-import { getProposal } from "@/lib/api";
-import ProposalView from "@/components/ProposalView";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { fetchProposal, ApiError } from "@/lib/api";
+import { ProposalView } from "@/components/ProposalView";
+import { ProposalSkeleton } from "@/components/features/proposal-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AlertCircle } from "lucide-react";
 
 interface ProposalPageProps {
   params: Promise<{ id: string }>;
 }
 
+async function ProposalContent({ id }: { id: string }) {
+  try {
+    const proposal = await fetchProposal(id);
+    return <ProposalView proposal={proposal} />;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      notFound();
+    }
+
+    return (
+      <EmptyState
+        title="Unable to load proposal"
+        description="We couldn't retrieve this proposal. Please check the URL or try again later."
+        icon={<AlertCircle className="h-6 w-6 text-destructive" />}
+        action={{
+          label: "Go to homepage",
+          href: "/",
+        }}
+      />
+    );
+  }
+}
+
 export default async function ProposalPage({ params }: ProposalPageProps) {
   const { id } = await params;
 
-  try {
-    const proposal = await getProposal(id);
-    return <ProposalView proposal={proposal} />;
-  } catch (error) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h1 className="text-xl font-semibold text-red-800 mb-2">
-            Proposal Not Found
-          </h1>
-          <p className="text-red-600">
-            The proposal you&apos;re looking for doesn&apos;t exist or you don&apos;t have
-            permission to view it.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <Suspense fallback={<ProposalSkeleton />}>
+      <ProposalContent id={id} />
+    </Suspense>
+  );
 }
