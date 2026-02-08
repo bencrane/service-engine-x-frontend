@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,6 +10,7 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getBrandingFromDomain, getDefaultBranding, type Branding } from "@/lib/branding";
 
 interface NavItem {
   readonly href: string;
@@ -41,15 +43,20 @@ const navItems: ReadonlyArray<NavItem> = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [branding, setBranding] = useState<Branding>(getDefaultBranding);
+
+  useEffect(() => {
+    setBranding(getBrandingFromDomain(window.location.hostname));
+  }, []);
 
   return (
     <aside className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-border bg-background">
       <div className="flex h-16 items-center border-b border-border px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <span className="text-sm font-bold text-primary-foreground">S</span>
+            <span className="text-sm font-bold text-primary-foreground">{branding.initial}</span>
           </div>
-          <span className="text-foreground">Service Engine</span>
+          <span className="text-foreground">{branding.name}</span>
         </Link>
       </div>
 
@@ -82,7 +89,7 @@ export function Sidebar() {
         <div className="text-xs text-muted-foreground">
           Need help?{" "}
           <a
-            href="mailto:support@serviceengine.xyz"
+            href={`mailto:${branding.supportEmail}`}
             className="text-primary hover:underline"
           >
             Contact support

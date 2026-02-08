@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
+import { getBrandingFromDomain } from "@/lib/branding";
 
-export const metadata: Metadata = {
-  title: "Service Engine - Project Workspace",
-  description: "Track your project progress and collaborate with your team",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "";
+  const branding = getBrandingFromDomain(host);
+
+  return {
+    title: `${branding.name} - Project Workspace`,
+    description: "Track your project progress and collaborate with your team",
+  };
+}
 
 interface RootLayoutProps {
   readonly children: React.ReactNode;

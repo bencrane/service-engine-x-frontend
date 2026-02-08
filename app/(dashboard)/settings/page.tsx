@@ -1,6 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Section } from "@/components/ui/section";
+import { getBrandingFromDomain, getDefaultBranding, type Branding } from "@/lib/branding";
 
 export default function SettingsPage() {
+  const [branding, setBranding] = useState<Branding>(getDefaultBranding);
+
+  useEffect(() => {
+    setBranding(getBrandingFromDomain(window.location.hostname));
+  }, []);
+
   return (
     <div className="space-y-8">
       <div className="space-y-1">
@@ -18,7 +28,7 @@ export default function SettingsPage() {
             <div>
               <p className="font-medium text-foreground">Email notifications</p>
               <p className="text-sm text-muted-foreground">
-                Receive updates about your orders via email
+                Receive updates about your projects via email
               </p>
             </div>
             <div className="text-sm text-muted-foreground">Coming soon</div>
@@ -41,10 +51,10 @@ export default function SettingsPage() {
             Need help? Contact your service provider:
           </p>
           <a
-            href="mailto:support@serviceengine.xyz"
+            href={`mailto:${branding.supportEmail}`}
             className="font-medium text-primary hover:underline"
           >
-            support@serviceengine.xyz
+            {branding.supportEmail}
           </a>
         </div>
       </Section>
