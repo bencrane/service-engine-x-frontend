@@ -23,7 +23,6 @@ export function TaskList({ tasks }: TaskListProps) {
                 <p className="text-sm text-muted-foreground">{task.description}</p>
               )}
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                {task.assignedTo && <span>Assigned to: {task.assignedTo}</span>}
                 {task.dueDate && <span>Due: {formatDate(task.dueDate)}</span>}
                 {task.completedAt && (
                   <span>Completed: {formatDate(task.completedAt)}</span>
