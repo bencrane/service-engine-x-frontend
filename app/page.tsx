@@ -1,3 +1,8 @@
+import Link from "next/link";
+
+// Test order ID - replace with a real order ID from your API
+const TEST_ORDER_ID = "test-order-123";
+
 export default function Home() {
   return (
     <div className="max-w-4xl mx-auto">
@@ -31,6 +36,26 @@ export default function Home() {
           <p className="text-sm text-gray-500">
             Access your orders via the link provided in your email.
           </p>
+        </div>
+      </div>
+
+      {/* Test Links Section */}
+      <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
+          Test Links
+        </h3>
+        <div className="space-y-3">
+          <div>
+            <Link
+              href={`/orders/${TEST_ORDER_ID}`}
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              View Test Order →
+            </Link>
+            <p className="text-xs text-gray-500 mt-1">
+              Order ID: {TEST_ORDER_ID}
+            </p>
+          </div>
         </div>
       </div>
 
