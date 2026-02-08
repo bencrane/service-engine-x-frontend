@@ -94,7 +94,7 @@ export function ActionableTaskList({
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            No pending tasks. You're all caught up!
+            No pending tasks. You're all caught up
           </p>
         </CardContent>
       </Card>
@@ -154,7 +154,7 @@ export function EmptyTaskList({ message }: EmptyTaskListProps) {
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          {message ?? "No pending tasks. You're all caught up!"}
+          {message ?? "No pending tasks. You're all caught up"}
         </p>
       </CardContent>
     </Card>

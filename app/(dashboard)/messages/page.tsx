@@ -71,7 +71,7 @@ async function MessagesContent() {
           </h2>
           <p className="mt-2 max-w-md text-muted-foreground">
             {projects.length > 0
-              ? "Start a conversation about your project. We're here to help!"
+              ? "Start a conversation about your project. We're here to help."
               : "Messages from your service provider will appear here."}
           </p>
           {projects.length > 0 && projects[0] && (

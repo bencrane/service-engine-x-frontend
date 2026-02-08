@@ -171,7 +171,7 @@ export function OnboardingSection({
           <div>
             <CardTitle className="text-lg">
               {isNewEngagement
-                ? "Welcome to your project workspace!"
+                ? "Welcome to your project workspace"
                 : "What's next"}
             </CardTitle>
             {isNewEngagement && (
