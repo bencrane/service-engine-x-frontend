@@ -144,8 +144,8 @@ export async function fetchOrder(id: string): Promise<Order> {
  * @throws ApiError if the request fails
  */
 export async function fetchOrders(): Promise<ReadonlyArray<Order>> {
-  const data = await fetchApi<OrderListApiResponse>(`/api/orders`);
-  return data.items.map(transformOrderResponse);
+  const response = await fetchApi<OrderListApiResponse>(`/api/orders`);
+  return response.data.map(transformOrderResponse);
 }
 
 // =============================================================================
@@ -171,8 +171,8 @@ export async function fetchProposal(id: string): Promise<Proposal> {
  * @throws ApiError if the request fails
  */
 export async function fetchProposals(): Promise<ReadonlyArray<Proposal>> {
-  const data = await fetchApi<ProposalListApiResponse>(`/api/proposals`);
-  return data.items.map(transformProposalResponse);
+  const response = await fetchApi<ProposalListApiResponse>(`/api/proposals`);
+  return response.data.map(transformProposalResponse);
 }
 
 // =============================================================================
@@ -204,7 +204,7 @@ interface OrderApiResponse {
   readonly tags: ReadonlyArray<string>;
   readonly status: string;
   readonly status_id: number;
-  readonly price: string;
+  readonly price: number;
   readonly quantity: number;
   readonly invoice_id?: string | null;
   readonly service: string;
@@ -216,10 +216,12 @@ interface OrderApiResponse {
 }
 
 interface OrderListApiResponse {
-  readonly items: ReadonlyArray<OrderApiResponse>;
-  readonly total: number;
-  readonly page: number;
-  readonly limit: number;
+  readonly data: ReadonlyArray<OrderApiResponse>;
+  readonly meta: {
+    readonly total: number;
+    readonly current_page: number;
+    readonly per_page: number;
+  };
 }
 
 interface ProposalItemApiResponse {
@@ -251,10 +253,12 @@ interface ProposalApiResponse {
 }
 
 interface ProposalListApiResponse {
-  readonly items: ReadonlyArray<ProposalApiResponse>;
-  readonly total: number;
-  readonly page: number;
-  readonly limit: number;
+  readonly data: ReadonlyArray<ProposalApiResponse>;
+  readonly meta: {
+    readonly total: number;
+    readonly current_page: number;
+    readonly per_page: number;
+  };
 }
 
 // =============================================================================
@@ -278,7 +282,7 @@ function transformOrderResponse(data: OrderApiResponse): Order {
         }
       : undefined,
     service: data.service,
-    total: parseFloat(data.price) || undefined,
+    total: data.price || undefined,
     notes: data.note ?? undefined,
   };
 }
