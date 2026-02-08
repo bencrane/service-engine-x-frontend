@@ -1,12 +1,15 @@
+export { ActionableTaskList, EmptyTaskList } from "./actionable-task-list";
+export { ActiveProjectCard } from "./active-project-card";
+export { ActivityFeed } from "./activity-feed";
 export { ClientInfo } from "./client-info";
 export { DashboardSkeleton } from "./dashboard-skeleton";
 export { LineItemsTable } from "./line-items-table";
 export { MessageList } from "./message-list";
+export { NextStepsSection, getNextSteps } from "./next-steps-section";
 export { NotesSection } from "./notes-section";
 export { OrderSkeleton } from "./order-skeleton";
-export { OrdersTable } from "./orders-table";
 export { OrderTotal } from "./order-total";
+export { ProjectProgress, getProjectPhases } from "./project-progress";
 export { ProposalSkeleton } from "./proposal-skeleton";
 export { ServiceList, SingleService } from "./service-list";
-export { StatCard } from "./stat-card";
 export { TaskList } from "./task-list";
