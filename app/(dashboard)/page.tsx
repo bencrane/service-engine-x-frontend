@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { headers } from "next/headers";
 import { Briefcase } from "lucide-react";
 import {
   fetchEngagements,
@@ -6,6 +7,7 @@ import {
   fetchConversations,
   ApiError,
 } from "@/lib/api";
+import { getBrandingFromDomain } from "@/lib/branding";
 import { ProjectCard, PhaseProgressLabeled } from "@/components/features/project-card";
 import {
   OnboardingSection,
@@ -26,6 +28,11 @@ export default function DashboardPage() {
 }
 
 async function DashboardContent() {
+  // Get branding from request headers
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "";
+  const branding = getBrandingFromDomain(host);
+
   let engagements: ReadonlyArray<Engagement> = [];
   let projects: ReadonlyArray<Project> = [];
   let conversations: ReadonlyArray<Conversation> = [];
@@ -70,21 +77,21 @@ async function DashboardContent() {
     (p) => p.status.toLowerCase() !== "completed"
   );
 
-  // No engagement or projects
+  // No engagement or projects - workspace is being set up
   if (!activeEngagement && activeProjects.length === 0) {
     return (
       <div className="space-y-8">
-        <WelcomeBanner />
+        <WelcomeBanner brandingName={branding.name} />
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
             <Briefcase className="h-6 w-6 text-muted-foreground" />
           </div>
           <h2 className="text-xl font-semibold text-foreground">
-            No active projects
+            Your workspace is being prepared
           </h2>
           <p className="mt-2 max-w-md text-muted-foreground">
-            You don't have any active projects at the moment. When you start a
-            new engagement, your projects will appear here.
+            We're setting up your project. You'll see your dashboard here once
+            everything is ready.
           </p>
         </div>
       </div>
@@ -108,6 +115,7 @@ async function DashboardContent() {
     <div className="space-y-8">
       {/* Welcome Banner */}
       <WelcomeBanner
+        brandingName={branding.name}
         clientName={clientName}
         engagementName={activeEngagement?.name}
       />

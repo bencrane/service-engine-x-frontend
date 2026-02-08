@@ -227,18 +227,26 @@ export function OnboardingSection({
 }
 
 interface WelcomeBannerProps {
+  readonly brandingName?: string;
   readonly clientName?: string;
   readonly engagementName?: string;
 }
 
 export function WelcomeBanner({
+  brandingName,
   clientName,
   engagementName,
 }: WelcomeBannerProps) {
+  const greeting = clientName
+    ? `Welcome, ${clientName}`
+    : brandingName
+      ? `Welcome to ${brandingName}`
+      : "Welcome to your workspace";
+
   return (
     <div className="space-y-2">
       <h1 className="text-2xl font-bold tracking-tight text-foreground">
-        {clientName ? `Welcome, ${clientName}` : "Welcome to your workspace"}
+        {greeting}
       </h1>
       {engagementName && (
         <p className="text-muted-foreground">
