@@ -90,6 +90,10 @@ async function fetchApi<T>(
   const url = `${API_URL}${endpoint}`;
   const { method = "GET", body } = options;
 
+  // Add timeout to prevent hanging when backend is unavailable
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
   try {
     const response = await fetch(url, {
       method,
@@ -99,7 +103,10 @@ async function fetchApi<T>(
       },
       body: body ? JSON.stringify(body) : undefined,
       cache: "no-store",
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorMessage = await getErrorMessage(response);
@@ -108,8 +115,15 @@ async function fetchApi<T>(
 
     return (await response.json()) as T;
   } catch (error) {
+    clearTimeout(timeoutId);
+
     if (error instanceof ApiError) {
       throw error;
+    }
+
+    // Handle abort/timeout
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new ApiError(0, "Request timed out", endpoint);
     }
 
     // Network or other errors
