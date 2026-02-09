@@ -4,15 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Conversation, Message } from "@/types";
 
-export default function InboxPage() {
+export default function ConversationsPage() {
   return (
-    <Suspense fallback={<InboxSkeleton />}>
-      <InboxContent />
+    <Suspense fallback={<ConversationsSkeleton />}>
+      <ConversationsContent />
     </Suspense>
   );
 }
 
-async function InboxContent() {
+async function ConversationsContent() {
   let conversations: ReadonlyArray<Conversation> = [];
   let error: string | null = null;
 
@@ -29,9 +29,9 @@ async function InboxContent() {
   if (error) {
     return (
       <EmptyState
-        title="Unable to load inbox"
+        title="Unable to load conversations"
         description={error}
-        action={{ label: "Try again", href: "/inbox" }}
+        action={{ label: "Try again", href: "/conversations" }}
       />
     );
   }
@@ -53,9 +53,9 @@ async function InboxContent() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-foreground">Inbox</h1>
+        <h1 className="text-2xl font-bold text-foreground">Conversations</h1>
         <p className="mt-1 text-muted-foreground">
-          Messages from your project team
+          Messages with your project team
         </p>
       </header>
 
@@ -111,7 +111,7 @@ async function InboxContent() {
   );
 }
 
-function InboxSkeleton() {
+function ConversationsSkeleton() {
   return (
     <div className="space-y-6">
       <div>
