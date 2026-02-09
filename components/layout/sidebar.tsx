@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  MessageSquare,
-  ClipboardList,
+  Inbox,
+  FileText,
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,14 +25,14 @@ const navItems: ReadonlyArray<NavItem> = [
     icon: <LayoutDashboard className="h-4 w-4" />,
   },
   {
-    href: "/messages",
-    label: "Messages",
-    icon: <MessageSquare className="h-4 w-4" />,
+    href: "/inbox",
+    label: "Inbox",
+    icon: <Inbox className="h-4 w-4" />,
   },
   {
-    href: "/tasks",
-    label: "Tasks",
-    icon: <ClipboardList className="h-4 w-4" />,
+    href: "/documents",
+    label: "Documents",
+    icon: <FileText className="h-4 w-4" />,
   },
   {
     href: "/settings",
